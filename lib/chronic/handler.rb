@@ -73,6 +73,9 @@ module Chronic
         puts "Handler: #{@handler_method}"
       end
 
+      options[:_type] = type
+      options[:_handler_method] = @handler_method
+
       parser.send(@handler_method, tokens, options)
     end
 

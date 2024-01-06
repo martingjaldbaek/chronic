@@ -561,6 +561,15 @@ module Chronic
         puts "--#{outer_span}"
       end
 
+      # This is intended to enumerate the situations in which the found date is
+      # just a guess and not parsed from the input string
+      # e.g. "3" interpreted as "3 o clock today"
+      # and add this as extra info to the output
+      if options[:_type] == :anchor && options[:_handler_method] == :handle_r &&
+        (head.is_a?(Chronic::RepeaterDayPortion) || head.is_a?(Chronic::RepeaterTime))
+        outer_span.date_is_guess = true
+      end
+
       find_within(repeaters, outer_span, pointer)
     end
 
@@ -588,6 +597,8 @@ module Chronic
       head = tags.shift
       head.start = (pointer == :future ? span.begin : span.end)
       h = head.this(:none)
+      # preserve the value of date_is_guess from outer_span
+      h.date_is_guess = span.date_is_guess
 
       if span.cover?(h.begin) || span.cover?(h.end)
         find_within(tags, h, pointer)

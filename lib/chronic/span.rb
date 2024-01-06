@@ -3,6 +3,15 @@ module Chronic
   # Range, you can use #begin and #end to get the beginning and
   # ending times of the span (they will be of class Time)
   class Span < Range
+    # Set to true when Chronic has just assumed the found date instead of parsing it from the input
+    # E.g. "3" is interpreted as "3 o clock today", but the date is just conjecture
+    attr_accessor :date_is_guess
+
+    def initialize(p1, p2, p3 = nil)
+      super
+      @date_is_guess = false
+    end
+
     # Returns the width of this span in seconds
     def width
       (self.end - self.begin).to_i
